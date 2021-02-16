@@ -58,7 +58,7 @@ import { FlutterUiGuideDecorationsLsp } from "./decorations/flutter_ui_guides_de
 import { getExperiments, KnownExperiments } from "./experiments";
 import { setUpDaemonMessageHandler } from "./flutter/daemon_message_handler";
 import { FlutterDaemon } from "./flutter/flutter_daemon";
-import { DasFlutterOutlineProvider, FlutterOutlineProvider, LspFlutterOutlineProvider } from "./flutter/flutter_outline_view";
+import { DasFlutterOutlineProvider, FlutterOutlineProvider, FlutterWidgetItem, LspFlutterOutlineProvider } from "./flutter/flutter_outline_view";
 import { FlutterTaskProvider } from "./flutter/flutter_task_provider";
 import { HotReloadOnSaveHandler } from "./flutter/hot_reload_save_handler";
 import { LspAnalyzerStatusReporter } from "./lsp/analyzer_status_reporter";
@@ -93,6 +93,7 @@ import { StatusBarVersionTracker } from "./sdk/status_bar_version_tracker";
 import { checkForStandardDartSdkUpdates } from "./sdk/update_check";
 import { SdkUtils } from "./sdk/utils";
 import { DartTerminalLinkProvider } from "./terminal/link_provider";
+import { DartTestProvider } from "./test/test_provider";
 import { handleNewProjects, showUserPrompts } from "./user_prompts";
 import * as util from "./utils";
 import { addToLogHeader, clearLogHeader, getExtensionLogPath, getLogHeader } from "./utils/log";
@@ -427,12 +428,12 @@ export async function activate(context: vs.ExtensionContext, isRestart: boolean 
 
 	util.logTime("All other stuff before debugger..");
 
-	const testTreeModel = new TestTreeModel(config, util.isPathInsideFlutterProject);
-	const testCoordinator = new TestSessionCoordinator(logger, testTreeModel);
+	const testModel = new TestTreeModel(config, util.isPathInsideFlutterProject);
+	const testCoordinator = new TestSessionCoordinator(logger, testModel);
 	const analyzerCommands = new AnalyzerCommands(context, logger, analyzer, analytics);
 
 	// Set up debug stuff.
-	const debugProvider = new DebugConfigProvider(logger, workspaceContext, analytics, pubGlobal, testTreeModel, flutterDaemon, deviceManager, debugCommands, dartCapabilities, flutterCapabilities);
+	const debugProvider = new DebugConfigProvider(logger, workspaceContext, analytics, pubGlobal, testModel, flutterDaemon, deviceManager, debugCommands, dartCapabilities, flutterCapabilities);
 	context.subscriptions.push(vs.debug.registerDebugConfigurationProvider("dart", debugProvider));
 	context.subscriptions.push(vs.debug.registerDebugAdapterDescriptorFactory("dart", new DartDebugAdapterDescriptorFactory(logger, context)));
 	// Also the providers for the initial configs.
@@ -540,9 +541,9 @@ export async function activate(context: vs.ExtensionContext, isRestart: boolean 
 		packagesTreeView,
 	);
 	if (lspAnalyzer)
-		context.subscriptions.push(new TestDiscoverer(logger, lspAnalyzer.fileTracker, testTreeModel));
-	const testTreeProvider = new TestResultsProvider(testTreeModel, testCoordinator);
-	const testTreeView = vs.window.createTreeView("dartTestTree", { treeDataProvider: testTreeProvider });
+		context.subscriptions.push(new TestDiscoverer(logger, lspAnalyzer.fileTracker, testModel));
+	const testTreeProvider = new TestResultsProvider(testModel, testCoordinator);
+	const testTreeView = vs.window.createTreeView<TreeNode>("dartTestTree", { treeDataProvider: testTreeProvider });
 	const tryReveal = async (node: TreeNode) => {
 		try {
 			await testTreeView.reveal(node);
@@ -566,12 +567,17 @@ export async function activate(context: vs.ExtensionContext, isRestart: boolean 
 				setTimeout(() => tryReveal(node), 100);
 		}),
 	);
+
+	const testProvider = new DartTestProvider(testModel);
+	context.subscriptions.push(testProvider);
+	context.subscriptions.push(vs.test.registerTestProvider(testProvider));
+
 	let flutterOutlineTreeProvider: FlutterOutlineProvider | undefined;
 	if (config.flutterOutline) {
 		// TODO: Extract this out - it's become messy since TreeView was added in.
 
 		flutterOutlineTreeProvider = dasAnalyzer ? new DasFlutterOutlineProvider(dasAnalyzer) : new LspFlutterOutlineProvider(lspAnalyzer!);
-		const tree = vs.window.createTreeView("dartFlutterOutline", { treeDataProvider: flutterOutlineTreeProvider, showCollapseAll: true });
+		const tree = vs.window.createTreeView<FlutterWidgetItem>("dartFlutterOutline", { treeDataProvider: flutterOutlineTreeProvider, showCollapseAll: true });
 		tree.onDidChangeSelection(async (e) => {
 			// TODO: This should be in a tree, not the data provider.
 			await flutterOutlineTreeProvider!.setContexts(e.selection);
@@ -703,7 +709,7 @@ export async function activate(context: vs.ExtensionContext, isRestart: boolean 
 			renameProvider,
 			safeToolSpawn,
 			testCoordinator,
-			testTreeModel,
+			testTreeModel: testModel,
 			testTreeProvider,
 			webClient,
 			workspaceContext,
