@@ -28,6 +28,8 @@ module.exports = {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		require("source-map-support").install();
 
+		process.on("unhandledRejection", (reason, promise) => { console.warn(reason); console.warn(promise); });
+
 		const callCallback = (error: any, failures?: number) => {
 			setTimeout(() => {
 				console.error(`Test process did not quit within 10 seconds!`);
