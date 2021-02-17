@@ -5,8 +5,8 @@ on: [push, pull_request]
 jobs:
   build:
 
-    name: "${{ matrix.bot }} (${{ matrix.dart-version }}/${{ matrix.code-version }}/${{ matrix.os }})"
-    runs-on: ${{ matrix.os }}
+    name: "${{ matrix.bot }} (${{ matrix.dart-version }}/${{ matrix.code-version }}/win)"
+    runs-on: windows-latest
     # We want to run on external PRs, but not on our own internal PRs as they'll be run
     # by the push to the branch.
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
@@ -14,7 +14,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
         node-version: [10]
         build-version: [dev]
         bot: [dart_debug]
@@ -33,10 +32,6 @@ jobs:
     steps:
 
       - uses: actions/checkout@v1
-
-      - name: Setup XVFB
-        if: matrix.os == 'ubuntu-latest'
-        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Setup Node v${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -155,20 +150,20 @@ jobs:
         uses: actions/upload-artifact@v1
         if: always()
         with:
-          name: test-logs-${{ matrix.os }}
+          name: test-logs-win
           path: .dart_code_test_logs
 
       - name: Store test results
         uses: actions/upload-artifact@v1
         if: always()
         with:
-          name: test-results-${{ matrix.os }}
+          name: test-results-win
           path: .test_results
 
       - name: Store coverage
         uses: actions/upload-artifact@v1
         if: success() && matrix.dart-version == 'stable' && matrix.code-version == 'stable'
         with:
-          name: coverage-${{ matrix.os }}
+          name: coverage-win
           path: coverage
 
