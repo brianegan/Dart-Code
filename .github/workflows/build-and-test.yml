@@ -18,10 +18,6 @@ jobs:
         build-version: [dev]
         bot: [dart_debug]
         include:
-          - build-version: stable
-            dart-version: stable
-            flutter-version: stable
-            code-version: stable
           - build-version: dev
             dart-version: dev
             flutter-version: dev
