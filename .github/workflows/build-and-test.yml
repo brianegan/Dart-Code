@@ -26,8 +26,6 @@ jobs:
             dart-version: dev
             flutter-version: dev
             code-version: insiders
-          - os: ubuntu-latest
-            bot: flutter_snap
 
     steps:
 
