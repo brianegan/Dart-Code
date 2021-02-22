@@ -44,7 +44,7 @@ export class DartTestDebugSession extends DartDebugSession {
 		// Instead, we do it the VM way for now...
 		if (this.shouldConnectDebugger) {
 			this.expectAdditionalPidToTerminate = true;
-			appArgs.push("--enable-vm-service=0");
+			appArgs.push(`--enable-vm-service=${args.vmServicePort}`);
 			appArgs.push("--pause_isolates_on_start=true");
 		}
 

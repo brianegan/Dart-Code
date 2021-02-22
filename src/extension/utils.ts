@@ -266,3 +266,8 @@ export function getExcludedFolders(f: WorkspaceFolder | undefined): string[] {
 		return folder;
 	});
 }
+
+let nextVmServicePort = 9050;
+export function getNextVmServicePort(): number {
+	return nextVmServicePort++;
+}

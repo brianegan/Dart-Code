@@ -169,7 +169,7 @@ export function spawnDartProcessPaused(program: Uri, cwd: Uri, ...vmArgs: string
 	const cwdPath = fsPath(cwd);
 	const dartPath = path.join(extApi.workspaceContext.sdks.dart!, dartVMPath);
 	const allArgs = [
-		"--enable-vm-service=0",
+		`--enable-vm-service=${getNextVmServicePort()}`,
 		"--pause_isolates_on_start=true",
 		...vmArgs,
 		programPath,
