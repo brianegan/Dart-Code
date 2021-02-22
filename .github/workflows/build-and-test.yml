@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
 
-    name: "${{ matrix.bot }} (${{ matrix.dart-version }}/${{ matrix.code-version }}/win)"
+    name: "${{ matrix.bot }} (${{ matrix.dart-version }}/${{ matrix.code-version }}/win) ${{ matrix.use-hardcoded-port }}"
     runs-on: windows-latest
     # We want to run on external PRs, but not on our own internal PRs as they'll be run
     # by the push to the branch.
@@ -15,6 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [10]
+        use-hardcoded-port: [hard-coded,zero]
         build-version: [dev]
         bot: [dart_debug]
         include:
@@ -139,6 +140,7 @@ jobs:
           FLUTTER_VERSION: ${{ matrix.flutter-version }}
           LOGS_NAME: ${{ matrix.dart-version }}_${{ matrix.code-version }}
           FLUTTER_REPO_PATH: ${{ steps.flutter.outputs.flutter-sdk }}
+          USE_HARD_CODED_PORT: ${{ matrix.use-hardcoded-port }}
 
       - name: Store logs
         uses: actions/upload-artifact@v1
