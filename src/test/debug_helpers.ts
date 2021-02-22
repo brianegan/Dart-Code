@@ -7,6 +7,7 @@ import { FlutterLaunchRequestArguments } from "../shared/debug/interfaces";
 import { DebuggerType, LogCategory } from "../shared/enums";
 import { SpawnedProcess } from "../shared/interfaces";
 import { logProcess } from "../shared/logging";
+import { getNextVmServicePort } from "../shared/utils";
 import { getDebugAdapterName, getDebugAdapterPort } from "../shared/utils/debug";
 import { fsPath } from "../shared/utils/fs";
 import { DartDebugClient } from "./dart_debug_client";

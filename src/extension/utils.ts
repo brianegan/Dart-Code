@@ -267,10 +267,3 @@ export function getExcludedFolders(f: WorkspaceFolder | undefined): string[] {
 	});
 }
 
-let nextVmServicePort = 9050;
-export function getNextVmServicePort(): number {
-	if (process.env.USE_HARD_CODED_PORT === "hard-coded")
-		return nextVmServicePort++;
-	else
-		return 0;
-}

@@ -12,7 +12,7 @@ import { Device } from "../../shared/flutter/daemon_interfaces";
 import { getFutterWebRendererArg } from "../../shared/flutter/utils";
 import { IFlutterDaemon, Logger } from "../../shared/interfaces";
 import { TestTreeModel } from "../../shared/test/test_model";
-import { filenameSafe } from "../../shared/utils";
+import { filenameSafe, getNextVmServicePort } from "../../shared/utils";
 import { findProjectFolders, forceWindowsDriveLetterToUppercase, fsPath, isWithinPath } from "../../shared/utils/fs";
 import { FlutterDeviceManager } from "../../shared/vscode/device_manager";
 import { warnIfPathCaseMismatch } from "../../shared/vscode/utils";
@@ -24,7 +24,7 @@ import { config } from "../config";
 import { locateBestProjectRoot } from "../project";
 import { PubGlobal } from "../pub/global";
 import { WebDev } from "../pub/webdev";
-import { getExcludedFolders, getNextVmServicePort, isFlutterProjectFolder, isInsideFolderNamed, isTestFileOrFolder, isTestFolder, isValidEntryFile, projectShouldUsePubForTests as shouldUsePubForTests } from "../utils";
+import { getExcludedFolders, isFlutterProjectFolder, isInsideFolderNamed, isTestFileOrFolder, isTestFolder, isValidEntryFile, projectShouldUsePubForTests as shouldUsePubForTests } from "../utils";
 import { getGlobalFlutterArgs, getToolEnv } from "../utils/processes";
 
 export class DebugConfigProvider implements DebugConfigurationProvider {
