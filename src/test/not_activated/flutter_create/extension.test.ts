@@ -56,6 +56,10 @@ describe("command", () => {
 		assert.ok(fs.existsSync(path.join(tempFolder, "my_test_flutter_proj", FLUTTER_CREATE_PROJECT_TRIGGER_FILE)));
 	});
 
+	it("Flutter: New List View / Detail View Application Project can be invoked and creates trigger file", async () => {
+		await projectContainsTriggerFileForExpectedTemplate("flutter.createProject.listDetailApp", "module");
+	});
+
 	it("Flutter: New Module Project can be invoked and creates trigger file", async () => {
 		await projectContainsTriggerFileForExpectedTemplate("flutter.createProject.module", "module");
 	});

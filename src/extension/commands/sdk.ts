@@ -68,10 +68,11 @@ export class SdkCommands {
 		context.subscriptions.push(vs.commands.registerCommand("flutter.packages.outdated", (selection) => vs.commands.executeCommand("dart.listOutdatedPackages", selection)));
 		context.subscriptions.push(vs.commands.registerCommand("flutter.doctor", this.flutterDoctor, this));
 		context.subscriptions.push(vs.commands.registerCommand("flutter.upgrade", this.flutterUpgrade, this));
-		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject", this.createFlutterProject, this));
-		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject.module", () => this.createFlutterProject("module"), this));
-		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject.package", () => this.createFlutterProject("package"), this));
-		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject.plugin", () => this.createFlutterProject("plugin"), this));
+		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject", () => this.createFlutterProject("flutter.createProject"), this));
+		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject.listDetailApp", () => this.createFlutterProject("flutter.createProject.listDetailApp", "list_detail_app"), this));
+		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject.module", () => this.createFlutterProject("flutter.createProject.module", "module"), this));
+		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject.package", () => this.createFlutterProject("flutter.createProject.package", "package"), this));
+		context.subscriptions.push(vs.commands.registerCommand("flutter.createProject.plugin", () => this.createFlutterProject("flutter.createProject.plugin", "plugin"), this));
 		context.subscriptions.push(vs.commands.registerCommand("_dart.flutter.createSampleProject", this.createFlutterSampleProject, this));
 		context.subscriptions.push(vs.commands.registerCommand("dart.createProject", this.createDartProject, this));
 		context.subscriptions.push(vs.commands.registerCommand("_dart.create", this.dartCreate, this));
@@ -617,9 +618,9 @@ export class SdkCommands {
 		vs.commands.executeCommand("vscode.openFolder", projectFolderUri, openInNewWindow);
 	}
 
-	private async createFlutterProject(template?: string): Promise<vs.Uri | undefined> {
+	private async createFlutterProject(command: string, template?: string): Promise<vs.Uri | undefined> {
 		if (!this.sdks || !this.sdks.flutter) {
-			this.sdkUtils.showFlutterActivationFailure("flutter.createProject");
+			this.sdkUtils.showFlutterActivationFailure(command);
 			return;
 		}
 

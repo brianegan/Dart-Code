@@ -31,6 +31,18 @@ export class SdkUtils {
 		context.subscriptions.push(commands.registerCommand("flutter.createProject", () => {
 			this.showRelevantActivationFailureMessage(analytics, workspaceContext, true, "flutter.createProject");
 		}));
+		context.subscriptions.push(commands.registerCommand("flutter.createProject.listDetailApp", () => {
+			this.showRelevantActivationFailureMessage(analytics, workspaceContext, true, "flutter.createProject.listDetailApp");
+		}));
+		context.subscriptions.push(commands.registerCommand("flutter.createProject.module", () => {
+			this.showRelevantActivationFailureMessage(analytics, workspaceContext, true, "flutter.createProject.module");
+		}));
+		context.subscriptions.push(commands.registerCommand("flutter.createProject.package", () => {
+			this.showRelevantActivationFailureMessage(analytics, workspaceContext, true, "flutter.createProject.package");
+		}));
+		context.subscriptions.push(commands.registerCommand("flutter.createProject.plugin", () => {
+			this.showRelevantActivationFailureMessage(analytics, workspaceContext, true, "flutter.createProject.plugin");
+		}));
 		context.subscriptions.push(commands.registerCommand("dart.createProject", () => {
 			this.showRelevantActivationFailureMessage(analytics, workspaceContext, false, "dart.createProject");
 		}));

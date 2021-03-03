@@ -41,6 +41,7 @@
 		"workspaceContains:flutter.sh.create",
 		"workspaceContains:flutter.create",
 		"onCommand:flutter.createProject",
+		"onCommand:flutter.createProject.listDetailApp",
 		"onCommand:flutter.createProject.module",
 		"onCommand:flutter.createProject.package",
 		"onCommand:flutter.createProject.plugin",
@@ -87,6 +88,11 @@
 			{
 				"command": "flutter.createProject",
 				"title": "New Application Project",
+				"category": "Flutter"
+			},
+			{
+				"command": "flutter.createProject.listDetailApp",
+				"title": "New List View / Detail View Application Project",
 				"category": "Flutter"
 			},
 			{
@@ -641,6 +647,9 @@
 			"commandPalette": [
 				{
 					"command": "flutter.createProject"
+				},
+				{
+					"command": "flutter.createProject.listDetailApp"
 				},
 				{
 					"command": "flutter.createProject.module"
